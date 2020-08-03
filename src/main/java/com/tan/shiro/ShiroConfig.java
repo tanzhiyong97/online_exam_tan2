@@ -39,6 +39,7 @@ public class ShiroConfig {
          */
         Map<String,String> filterMap = new LinkedHashMap<String,String>();
 
+        /*swagger-ui过滤资源*/
         filterMap.put("/static/**", "anon");
         filterMap.put("/swagger-ui.html", "anon");
         filterMap.put("/swagger-resources/**", "anon");
