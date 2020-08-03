@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tan.mapper.AdminUserMapper">
+    <select id="findByUsername"  parameterType="String"  resultType="LoginUser" >
+    select username,password,roles from users_login where username = #{value}
+  </select>
+    <!--    返回修改界面表单的信息-->
+    <select id="findAdminById"  parameterType="int"  resultType="LoginUser" >
+    select  id,username,password,roles from users_login where id = #{value}
+  </select>
+<!--    &lt;!&ndash;    返回修改界面表单的信息&ndash;&gt;-->
+<!--    <select id="findTeacherById"  parameterType="int"  resultType="LoginUser" >-->
+<!--    select  l.id,l.username,l.password,l.roles,t.className,t.teacherName,t.tel-->
+<!--    from users_login l,teacher_information t-->
+<!--     where l.id = #{value}-->
+<!--     and l.username=t.username-->
+<!--  </select>-->
+
+    <!--	返回所有管理员用户信息给前端页面-->
+    <select id="findAdminByRoles"  parameterType="String"  resultType="LoginUser" >
+    select  id,username,password,roles from users_login where roles = #{value}
+  </select>
+
+    <!--	返回所有教师用户信息给前端页面-->
+    <select id="findTeacherByRoles"  parameterType="String"  resultType="TeacherInformation" >
+    select  l.id,l.username,l.password,l.roles,t.className,t.teacherName,t.tel
+    from users_login l,teacher_information t
+    where l.roles = #{value}
+    and  l.username=t.username
+  </select>
+
+    <!--	返回所有学生用户信息给前端页面-->
+    <select id="findStudentByRoles" parameterType="String" resultType="StudentInformation">
+        select l.id, l.username, l.password, l.roles, s.stuId, s.stuName, s.stuTime, s.sex, s.stuClass, s.tel
+        from users_login l, student_information s
+        where l.roles = #{value}
+        and l.username = s.username
+    </select>
+
+    <!--根据id查找学生详细表的-->
+    <select id="findteacherIdById"  parameterType="int"  resultType="int" >
+    select  t.teacherId
+    from users_login l,teacher_information t
+    where l.id = #{value}
+    and
+    l.username=t.username
+  </select>
+
+    <!-- 进行增加各种登录用户-->
+    <insert id="addLoginUser" parameterType="LoginUser">
+	INSERT INTO users_login
+			(
+			username,
+			password,
+			roles
+
+			)
+			VALUES
+			(
+			#{username},
+			#{password},
+			#{roles}
+			)
+    </insert>
+    <!-- 根据id修改各种登录用户数据 -->
+    <update id="updateLoginUser" parameterType="LoginUser">
+		UPDATE users_login
+			SET
+			username = #{username} ,
+			password = #{password}
+
+		WHERE
+			id = #{id}
+	</update>
+
+
+    <!-- 删除指定id的loginUser -->
+    <delete id="deleteLoginUser" parameterType="Integer[]">
+        delete from users_login
+        <where>
+            id
+            <foreach collection="array" item="id" open="in (" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+
+    <!-- 删除指定id的Teacher -->
+    <delete id="deleteTeacher" parameterType="Integer[]">
+        delete from teacher_information
+        <where>
+            id
+            <foreach collection="array" item="id" open="in (" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+
+    <!-- 进行增加教师用户详细信息-->
+    <insert id="addTeacherInformation" parameterType="TeacherInformation">
+	INSERT INTO teacher_information
+			(
+			username,
+			className,
+			teacherName,
+			tel
+			)
+			VALUES
+			(
+			#{username},
+			#{className},
+			#{teacherName},
+			#{tel}
+			)
+    </insert>
+
+    <!--根据id查找教师详细表的teacherId-->
+    <select id="findStudentById"  parameterType="int"  resultType="LoginUser" >
+    select  s.id
+    from users_login l,student_information s
+    where l.id = #{value}
+    and
+    l.username=s.username
+  </select>
+
+    <!-- 修改教师用户信息 -->
+    <update id="updateTeacherInformation" parameterType="TeacherInformation">
+		UPDATE teacher_information
+			SET
+			username = #{username} ,
+			className = #{className},
+			teacherName = #{teacherName}
+			tel = #{tel}
+		WHERE
+			teacherId = #{teacherId}
+	</update>
+
+    <!--修改学生用户数据-->
+    <update id="updateStudentInformation" parameterType="LoginUser">
+        update student_information
+        set
+        s.password = #{password}
+        from users_login l, student_information s
+        where l.username = s.username
+    </update>
+
+    <select id="findTeacherByUsername" parameterType="String" resultType="TeacherInformation">
+        select * from teacher_information where username=#{username}
+    </select>
+
+    <select id="findTeacherById" parameterType="int" resultType="TeacherInformation">
+        select * from teacher_information where teacherId=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tan.mapper.ExamSubjectMapper">
+   <select id="findAllExamSubject" resultType="ExamSubject">
+       select testId, subjectName, timeLimit
+       from exam_subject e, teacher_information t, student_information s
+       where
+       s.stuClass=t.className
+       and
+       e.teacherName=t.teacherName
+       and
+       s.username=#{value}
+
+   </select>
+
+    <select id="manageStuExam"  parameterType="int" resultMap="myExamResult">
+     select e.subjectName,s.radioScores,s.checkScores,s.total,
+       s.createTime,i.stuId,i.stuName
+    from stu_examscore s,student_information i,exam_subject e, teacher_information t
+    where
+    t.teacherId=#{value}
+   and  e.testId=s.testId
+   and  s.username=i.username
+   and  e.teacherName=t.teacherName;
+  </select>
+
+    <resultMap id="myExamResult" type="ExamResult">
+        <id property="totalScores" column="total"/>
+    </resultMap>
+
+    <select id="findTeacherIdByUsername"  parameterType="String" resultType="int" >
+   select teacherId
+   from teacher_information
+   where username=#{value}
+  </select>
+
+    <select id="findExamSubjectForAdmin" resultType="ExamSubject">
+        select e.testId, e.subjectName, e.createTime, e.timeLimit, t.teacherName,t.teacherId, t.username,  t.className, t.tel
+        from exam_subject as e, teacher_information as t
+        where e.teacherName=t.teacherName
+    </select>
+
+<!--    <resultMap id="exam" type="ExamSubject">
+        <id property="subjectId" column="subjectId"/>
+        <result property="subjectName" column="subjectName"/>
+        <result property="createTime" column="createTime"/>
+        <result property="teacherName" column="teacherName"/>
+        <association property="teacher" javaType="TeacherInformation">
+            <id property="teacherId" column="teacherId"/>
+            <result property="username" column="username"/>
+            <result property="className" column="className"/>
+            <result property="tel" column="tel"/>
+            <result property="teacherName" column="teacherName"/>
+        </association>
+    </resultMap>-->
+
+    <select id="findExamSubjectForTeacher" parameterType="String" resultType="ExamSubject">
+        select * from exam_subject where teacherName=#{teacherName}
+    </select>
+
+    <insert id="addExamSubject" parameterType="ExamSubject">
+        insert into exam_subject (subjectName, createTime, teacherName, timeLimit) values
+        (#{subjectName}, #{createTime}, #{teacherName}, #{timeLimit})
+    </insert>
+
+    <select id="findExamSubjectByTestId" parameterType="int" resultType="ExamSubject">
+        select timeLimit, teacherName, createTime, subjectName from exam_subject
+        where testId=#{testId}
+    </select>
+
+    <select id="findAllExamByUsername"  resultType="ExamSubject">
+        select timeLimit, t.teacherName, createTime, subjectName, testId
+        from exam_subject e, student_information s, teacher_information t
+        where
+        s.username = #{username}
+        and
+        s.stuClass = t.className
+        and
+        t.teacherName = e.teacherName
+    </select>
+</mapper>

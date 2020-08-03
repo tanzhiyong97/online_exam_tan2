@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tan.mapper.StuUserMapper">
+    <!--	登录验证 -->
+    <select id="findByUsername"   parameterType="String" resultType="LoginUser" >
+    select username,password,roles from users_login where username = #{value}
+  </select>
+
+    <!--	验证注册用户名是否存在 -->
+    <select id="findRegisterUsername"   parameterType="String" resultType="LoginUser" >
+    select username  from users_login where username = #{username}
+  </select>
+    <!-- 添加学生用户账号 -->
+    <insert id="register" parameterType="LoginUser">
+		INSERT INTO users_login
+			(
+			username,
+			password,
+			roles
+			)
+			VALUES
+			(
+			#{username},
+			#{password},
+			#{roles}
+			)
+	</insert>
+
+    <!-- 添加用户账号 -->
+    <insert id="addStudentInformation" parameterType="StudentInformation">
+		INSERT INTO student_information
+			(
+			username,
+			password,
+			stuId,
+			stuName,
+			stuTime,
+            sex,
+            stuClass,
+            tel
+			)
+			VALUES
+			(
+			#{username},
+			#{password},
+			#{stuId},
+			#{stuName},
+			#{stuTime},
+			#{sex},
+			#{stuClass},
+			#{tel}
+			)
+	</insert>
+
+    <!--	修改用户密码-->
+    <update id="updatePassword" parameterType="LoginUser" >
+    update users_login
+    set password = #{password}
+    where username=#{username}
+  </update>
+
+    <!--查询用户信息	 -->
+    <select id="findInformationByUsername"   parameterType="String" resultType="StudentInformation" >
+    select sex,stuId,stuName,stuTime,stuClass,tel from student_information where username = #{value}
+  </select>
+
+
+    <!--	修改用户信息-->
+    <update id="updateInformation" parameterType="StudentInformation">
+	 update student_information
+    set stuId = #{stuId},
+    sex=#{sex},
+    stuName=#{stuName},
+    stuTime=#{stuTime},
+    stuClass=#{stuClass},
+    tel=#{tel}
+    where username=#{username}
+	</update>
+</mapper>

@@ -1,0 +1,74 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>在线考试系统-选择课程</title>
+    <link rel="stylesheet" type="text/css"
+          href="/static/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css"
+          href="/static/easyui/themes/icon.css">
+    <script type="text/javascript"
+            src="/static/easyui/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="/static/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript"
+            src="/static/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var spanText = $("#sp").text();
+            if(spanText==""){
+                $("#ft").hide();
+            }
+            $("#examSubject").combobox({
+                url:'ExamSubjectList',
+                valueField:'testId',
+                textField:'subjectName',
+                //editable :不让在combo的框内直接输入文字
+                editable:false,
+                panelHeight:'auto'
+            })
+            $("#subm").click(function(){
+                if($("#examSubject").val()==""){
+                    $.messager.alert("系统提示","请选择考试科目！");
+                    return false;
+                }
+                return true;
+            })
+        })
+    </script>
+</head>
+<body style="background-image:url('static/image/ocean.jpg');background-size:cover">
+<div >
+    <font color="black" size="10" face="仿宋" style="font-weight:bold;margin-left:2%"> 在 线 考 试 系 统</font>
+    <div align="right">
+        <b>当前在线用户：<span id="sp" th:text="${session.username}"></span>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+    </div>
+</div>
+<div style="margin-top:2%;margin-left:2%">
+    <font color="black">当前位置：在线考试 >> 选择考试课程</font>
+</div>
+<br>
+<br>
+<center style="margin-top:2%">
+    <form action="toExamPageList" method="post">
+        <table cellpadding="15px">
+            <tr>
+                <td>请选择考试课程</td>
+                <td align="center"><input id="examSubject" name="subjectName"></td>
+            </tr>
+            <tr>
+                <h1>考试时间为50分钟，点击确定后开始考试计时</h1>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input id="subm" type="submit" value="确定"></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <a href="index" class="easyui-linkbutton" data-options="iconCls:'icon-back'">回 到 首 页</a>
+</center>
+</body>
+</html>

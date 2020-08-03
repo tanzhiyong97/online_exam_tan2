@@ -1,0 +1,49 @@
+#数据库配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.97.228.130:3306/online_exam?serverTimezone=Asia/Shanghai
+    username: online_exam
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #druid数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnRetuen: false
+    #打开PSCache
+    poolPreparedStatements: true
+    #配置监控统计拦截的filters，stat：监控统计、log4j：日记记录、wall：防御slq注入
+    #如果运行时报错 java.lang.ClassNotFoundException:org.apache.log4j.Priority
+    #则导入 log4j依赖即可
+    fileters: stat,wall,log4j,config
+    #指定每个连接上PSCache的大小
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+    #通过connectionProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSQl=true;druid.stat.slowSqlMillis=5000
+
+  mvc:
+    static-path-pattern: /static/**
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+
+
+#tomcat端口
+server:
+  port: 8081
+
+#整合mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.tan.pojo
+

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tan.mapper.ExamQuestionMapper">
+    <select id="examQuestionByTeacherName" parameterType="String" resultType="Questions">
+        select q.id,q.content,q.testId,q.type,e.subjectName,q.optionA,q.optionB,q.optionC,q.optionD,q.answer
+         from questions q, exam_subject e
+         where q.testId=e.testId
+         and
+         e.teacherName = #{teacherName} order by q.testId
+    </select>
+
+    <select id="findExamSubjectByTeacherName" parameterType="String" resultType="ExamSubject">
+        select  * from exam_subject where teacherName = #{teacherName}
+    </select>
+
+    <select id="findExamQuestionById" parameterType="int" resultType="Questions">
+        select  q.id,q.content,q.testId,q.type,e.subjectName,q.optionA,q.optionB,q.optionC,q.optionD,q.answer
+        from questions q, exam_subject e
+        where id = #{id} and q.testId=e.testId
+    </select>
+
+    <!--添加试题-->
+    <insert id="addExamQuestions" parameterType="Questions">
+        insert into questions (content, type, testId, optionA, optionB, optionC, optionD, answer)
+        values (#{content}, #{type}, #{testId}, #{optionA}, #{optionB}, #{optionC}, #{optionD}, #{answer})
+    </insert>
+
+    <!--修改试题-->
+    <update id="updateExamQuestions" parameterType="Questions">
+        update questions set content=#{content}, type=#{type}, testId=#{testId},
+        optionA=#{optionA}, optionB=#{optionB}, optionC=#{optionC}, optionD=#{optionD}, answer=#{answer}
+        where id=#{id}
+    </update>
+
+    <!--删除试题-->
+    <delete id="deleteQuestion" parameterType="int">
+        delete from questions where id=#{id}
+    </delete>
+
+    <!--单选题-->
+    <select id="findExamRadioQuestions" parameterType="int" resultType="Questions">
+        select q.id, q.content, q.type, q.testId, q.optionA, q.optionB, q.optionC, q.optionD, q.answer, e.subjectName
+        from questions q, exam_subject e
+        where e.testId=#{value}
+        and
+        q.type='单选'
+        and
+        q.testId=e.testId
+    </select>
+
+    <!--多选题-->
+    <select id="findExamCheckboxQuestions" parameterType="int" resultType="Questions">
+        select q.id, q.content, q.type, q.testId, q.optionA, q.optionB, q.optionC, q.optionD, q.answer, e.subjectName
+        from questions q, exam_subject e
+        where e.testId=#{value}
+        and
+        q.type='多选'
+        and
+        q.testId=e.testId
+    </select>
+
+    <!--通过id查找试题答案-->
+    <select id="findExamAnswerById" parameterType="String" resultType="Questions">
+        select q.id, q.testId, q.answer, q.type, e.subjectName
+        from questions q, exam_subject e
+        where
+        q.id=#{value}
+        and
+        e.testId=q.testId
+    </select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tan.mapper.StudentScoreMapper">
+    <!--添加学生考试成绩记录-->
+    <insert id="addStuExamScore" parameterType="Score">
+        insert into stu_examscore
+        (
+        testId,
+        username,
+        radioScores,
+        checkScores,
+        total,
+        createTime
+        )
+        values
+        (
+        #{testId},
+        #{username},
+        #{radioScores},
+        #{checkScores},
+        #{total},
+        #{createTime}
+        )
+    </insert>
+
+    <select id="findExamStuByUsername" parameterType="String" resultType="StudentInformation">
+        select stuId, stuName, stuClass
+        from student_information
+        where
+        username=#{value}
+    </select>
+
+    <select id="findExamScoreByUsername" parameterType="String" resultType="HashMap">
+        select
+        e.subjectName, s.radioScores, s.checkScores, s.total, s.createTime
+        from stu_examscore s, exam_subject e
+        where
+        username=#{value}
+        and
+        e.testId=s.testId
+    </select>
+</mapper>
